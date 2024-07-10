@@ -17,10 +17,20 @@ if not os.path.exists(UPLOAD_FOLDER):
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Load the saved model
-model = joblib.load('DecisionTree_classifier_model.bin')
+model_path = 'DecisionTree_classifier_model.bin'
+if os.path.exists(model_path):
+    model = joblib.load(model_path)
+else:
+    raise FileNotFoundError(f"Model file not found: {model_path}")
 
-# Preprocess the data
-processed_genotype_data, feature_matrix, aims_data_df = run_preprocessing_logic()
+# Preprocess the data if not already done
+processed_data_path = 'processed_data.pkl'
+if os.path.exists(processed_data_path):
+    processed_genotype_data, feature_matrix, aims_data_df = joblib.load(processed_data_path)
+else:
+    processed_genotype_data, feature_matrix, aims_data_df = run_preprocessing_logic()
+    joblib.dump((processed_genotype_data, feature_matrix, aims_data_df), processed_data_path)
+
 snp_list = aims_data_df['Position'].tolist()
 ethnicity_labels = model.classes_
 
@@ -48,5 +58,5 @@ def index():
     return "Welcome to the DNA Classifier API!"
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=7300, debug=True)
-
+    # Ensure the app runs in the proper context for Heroku
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 7300)), debug=False)
