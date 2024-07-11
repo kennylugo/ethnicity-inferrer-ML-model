@@ -15,18 +15,22 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# Ensure the necessary files are included in your app's directory
 processed_data_path = 'processed_data.pkl'
-if os.path.exists(processed_data_path):
-    processed_genotype_data, feature_matrix, aims_data_df = joblib.load(processed_data_path)
-    snp_list = aims_data_df['Position'].tolist()
-else:
-    print("Cannot find processed data file. ")
+model_path = 'DecisionTree_classifier_model.bin'
+
+if not os.path.exists(model_path):
+    raise FileNotFoundError(f"Model file not found: {model_path}")
 
 # Load pre-trained model
-model_path = 'DecisionTree_classifier_model.bin'
 trained_model = joblib.load(model_path)
-ethnicity_labels = trained_model.classes_
 
+# Preprocess the data
+if os.path.exists(processed_data_path):
+    processed_genotype_data, feature_matrix, aims_data_df = joblib.load(processed_data_path)
+
+snp_list = aims_data_df['Position'].tolist()
+ethnicity_labels = trained_model.classes_
 
 @app.route('/classify', methods=['POST'])
 def classify():
@@ -53,7 +57,5 @@ def index():
     return "Welcome to the DNA Classifier API!"
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=7300, debug=True)
-
-
-
+    port = int(os.environ.get('PORT', 7300))
+    app.run(host='0.0.0.0', port=port, debug=False)
