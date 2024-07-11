@@ -48,6 +48,10 @@ def classify():
             # Perform classification
             top_3_ethnicities = classify_dna_sample(file_path, trained_model, snp_list, ethnicity_labels)
             print(f"Top 3 Predicted Ethnicities: {top_3_ethnicities}")
+
+            # Delete the DNA file after classification
+            os.remove(file_path)
+
             return jsonify({"top_3_ethnicities": top_3_ethnicities})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
