@@ -19,8 +19,7 @@ processed_data_path = 'processed_data.pkl'
 if os.path.exists(processed_data_path):
     processed_genotype_data, feature_matrix, aims_data_df = joblib.load(processed_data_path)
 else:
-    processed_genotype_data, feature_matrix, aims_data_df = run_preprocessing_logic()
-    joblib.dump((processed_genotype_data, feature_matrix, aims_data_df), processed_data_path)
+    print("Cannot find processed data file. ")
 
 # Load pre-trained model
 model_path = 'DecisionTree_classifier_model.bin'
