@@ -18,16 +18,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 processed_data_path = 'processed_data.pkl'
 if os.path.exists(processed_data_path):
     processed_genotype_data, feature_matrix, aims_data_df = joblib.load(processed_data_path)
+    snp_list = aims_data_df['Position'].tolist()
 else:
     print("Cannot find processed data file. ")
 
 # Load pre-trained model
 model_path = 'DecisionTree_classifier_model.bin'
 trained_model = joblib.load(model_path)
-
-# Preprocess the data
-processed_genotype_data, feature_matrix, aims_data_df = run_preprocessing_logic()
-snp_list = aims_data_df['Position'].tolist()
 ethnicity_labels = trained_model.classes_
 
 
