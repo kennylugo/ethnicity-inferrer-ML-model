@@ -1,5 +1,4 @@
 import pandas as pd
-from loguru import logger
 
 # Function to classify DNA sample
 def classify_dna_sample(dna_file_path, model, snp_list, ethnicity_labels):
@@ -13,12 +12,12 @@ def classify_dna_sample(dna_file_path, model, snp_list, ethnicity_labels):
         if 'allele1' not in dna_data.columns or 'allele2' not in dna_data.columns:
             raise ValueError("Expected columns 'allele1' and 'allele2' not found in the AncestryDNA file")
         
-        logger.debug("Parsing AncestryDNA file format")
+        print("Parsing AncestryDNA file format")
         for _, row in dna_data.iterrows():
             position = row['position']
             if position in snp_list:
                 genotype = row['allele1'] + row['allele2']
-                logger.debug(f"Processing position {position} with genotype {genotype}")
+                print(f"Processing position {position} with genotype {genotype}")
                 if genotype in ['AA', 'GG', 'TT', 'CC']:
                     genotype_dict[position] = 0
                 elif genotype in ['AG', 'GA', 'CT', 'TC']:
@@ -29,12 +28,12 @@ def classify_dna_sample(dna_file_path, model, snp_list, ethnicity_labels):
         if 'genotype' not in dna_data.columns:
             raise ValueError("Expected column 'genotype' not found in the 23andMe file")
         
-        logger.debug("Parsing 23andMe file format")
+        print("Parsing 23andMe file format")
         for _, row in dna_data.iterrows():
             position = row['position']
             if position in snp_list:
                 genotype = row['genotype']
-                logger.debug(f"Processing position {position} with genotype {genotype}")
+                print(f"Processing position {position} with genotype {genotype}")
                 if genotype in ['AA', 'GG', 'TT', 'CC']:
                     genotype_dict[position] = 0
                 elif genotype in ['AG', 'GA', 'CT', 'TC']:
@@ -45,23 +44,24 @@ def classify_dna_sample(dna_file_path, model, snp_list, ethnicity_labels):
         if not all(col in dna_data.columns for col in ['rsid', 'chromosome', 'position', 'genotype']):
             raise ValueError("Expected columns 'rsid', 'chromosome', 'position', 'genotype' not found in the file")
         
-        logger.debug("Parsing general DNA file format")
+        print("Parsing general DNA file format")
         for _, row in dna_data.iterrows():
             position = row['position']
             if position in snp_list:
                 genotype = row['genotype']
-                logger.debug(f"Processing position {position} with genotype {genotype}")
+                print(f"Processing position {position} with genotype {genotype}")
                 if genotype in ['AA', 'GG', 'TT', 'CC']:
                     genotype_dict[position] = 0
                 elif genotype in ['AG', 'GA', 'CT', 'TC']:
                     genotype_dict[position] = 1
     
     if not genotype_dict:
-        logger.error("No valid genotype data found in the file")
+        print("No valid genotype data found in the file")
         raise ValueError("No valid genotype data found in the file")
 
-    feature_vector = pd.Series(genotype_dict, index=snp_list).fillna(0)
+    feature_vector = pd.Series(genotype_dict, index=snp_list).fillna(7)
     matrix_for_prediction = pd.DataFrame([feature_vector])
+
 
     probabilities = model.predict_proba(matrix_for_prediction)[0]
     top_3_indices = probabilities.argsort()[-3:][::-1]
