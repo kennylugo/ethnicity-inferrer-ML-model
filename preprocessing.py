@@ -5,8 +5,8 @@ from loguru import logger
 from tabulate import tabulate
 
 # Define file paths as constants
-VCF_DIR = "X"
-METADATA_FILE = "X"
+VCF_DIR = "XX"
+METADATA_FILE = "XX"
 BED_FILE_PATH = "246_COMBINED_AISNPS.BED"
 
 # Utility function to load sample metadata
