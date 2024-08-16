@@ -5,9 +5,9 @@ from loguru import logger
 from tabulate import tabulate
 
 # Define file paths as constants
-VCF_DIR = "/Users/kennybatista/Downloads/VCF/"
-METADATA_FILE = "/Users/kennybatista/Downloads/VCF/igsr-1000 genomes phase 3 release.tsv"
-BED_FILE_PATH = "246_COMBINED_AISNPS.BED"
+VCF_DIR = "X"
+METADATA_FILE = "X"
+BED_FILE_PATH = "X"
 
 # Utility function to load sample metadata
 def load_sample_metadata(file_path):

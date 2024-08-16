@@ -10,8 +10,7 @@ from sklearn.naive_bayes import GaussianNB
 
 # Central configuration for DNA files and models
 dna_files = [
-    # '/Users/kennybatista/Documents/Documents/DNA Data/Kenny DNA Data/AncestryDNA.txt',
-    '/Users/kennybatista/Documents/Documents/DNA Data/Ale DNA Data/AncestryDNA.txt'
+    # 'DNA.txt',
 ]
 
 models = [

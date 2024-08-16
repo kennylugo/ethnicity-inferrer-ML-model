@@ -2,11 +2,14 @@ import pandas as pd
 
 # Function to classify DNA sample
 def classify_dna_sample(dna_file_path, model, snp_list, ethnicity_labels):
+    print('opening DNA file')
     with open(dna_file_path, 'r') as file:
+        print("opened DNA file")
         header_lines = [next(file) for _ in range(100)]
-
+        print("Header lines: ", header_lines)
+    
     genotype_dict = {}
-
+    
     if any('allele1' in line for line in header_lines):
         dna_data = pd.read_table(dna_file_path, sep='\t', comment='#')
         if 'allele1' not in dna_data.columns or 'allele2' not in dna_data.columns:
@@ -22,7 +25,6 @@ def classify_dna_sample(dna_file_path, model, snp_list, ethnicity_labels):
                     genotype_dict[position] = 0
                 elif genotype in ['AG', 'GA', 'CT', 'TC']:
                     genotype_dict[position] = 1
-           
     elif any('23andMe' in line for line in header_lines):
         dna_data = pd.read_table(dna_file_path, sep='\t', comment='#', names=['rsid', 'chromosome', 'position', 'genotype'])
         if 'genotype' not in dna_data.columns:
@@ -54,7 +56,8 @@ def classify_dna_sample(dna_file_path, model, snp_list, ethnicity_labels):
                     genotype_dict[position] = 0
                 elif genotype in ['AG', 'GA', 'CT', 'TC']:
                     genotype_dict[position] = 1
-    
+    else:
+        print("Was not able to recognize file type, wether it was AncestryDNA, 23AndMe or General")
     if not genotype_dict:
         print("No valid genotype data found in the file")
         raise ValueError("No valid genotype data found in the file")

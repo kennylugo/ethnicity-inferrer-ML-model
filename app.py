@@ -34,6 +34,7 @@ ethnicity_labels = trained_model.classes_
 
 @app.route('/classify', methods=['POST'])
 def classify():
+    print("running /classify")
     try:
         if 'file' not in request.files:
             return jsonify({"error": "No file part"}), 400
@@ -41,9 +42,13 @@ def classify():
         if file.filename == '':
             return jsonify({"error": "No selected file"}), 400
         if file:
+
+            print("Uploading file")
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
+
+            print("About to perform classification")
 
             # Perform classification
             top_3_ethnicities = classify_dna_sample(file_path, trained_model, snp_list, ethnicity_labels)
@@ -54,6 +59,7 @@ def classify():
 
             return jsonify({"top_3_ethnicities": top_3_ethnicities})
     except Exception as e:
+        print(f"Error during classification: {str(e)}")
         return jsonify({"error": str(e)}), 500
     
 @app.route('/', methods=['GET'])
