@@ -5,6 +5,6 @@ If modifying the model, locate these two variables in preprocessing.py VCF_DIR, 
 
 If not modifying the model and prefer to to use the pre-trained model, run the app.py file and use a tool like postman to send a 'file' multipart via the request body to the /classify endpoint.
 
-## The video below gives you an overview of the project
+## Click the thumbnail/video below to get an overview of the project
 
 [![](https://cdn.loom.com/sessions/thumbnails/f59885fec2e942d49ac31908f423a0dd-9b4dd59f348bd4ff-full.jpg)]([https://www.loom.com/somevideourl](https://www.loom.com/share/f59885fec2e942d49ac31908f423a0dd))
